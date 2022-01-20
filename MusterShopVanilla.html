@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+<style>
+    .inline {
+        display:inline-block;
+        margin-right:5px;
+    }
+
+    <!--Flex boxen -->
+    .wrapper{
+        margin: 15px;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width : 100%;
+    }
+    .column{
+        display:flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        flex:1;
+    }
+
+    .products{
+    <!--background-color: blue; -->
+        height: 300px;
+    }
+
+    .mitteOben{
+     <!--background-color: yellow; -->
+        height: 300px;
+    }
+    .mitteUnten{
+    <!--background-color: purple; -->
+        height: 300px;
+    }
+    .rechtsUnten{
+    <!--background-color: aqua; -->
+        height: 300px;
+    }
+
+
+    .shoppingcart{
+    <!--background-color: green; -->
+        height: 300px;
+    }
+
+    .zubehoer{
+    <!--   background-color: red; -->
+        height: auto;
+    }
+
+    .header img{
+        float:right;
+        object-fit: contain;
+    }
+    .header h3{
+        position: relative;
+    }
+
+</style>
+
+
+
+</head>
+<body>
+<h1>Schreibwarenshop</h1>
+<div class="wrapper">
+     <div class="row">
+         <div class="column">
+             <div class="products">
+                 <h3>Produkte</h3>
+                 <div>
+                     <table class="table" id="ptable">
+                    </table>
+                     </div>
+             </div>
+     </div>
+
+            <div class="column">
+                <div class="mitteOben">
+                    <div id="newsletterPrompt" style="display: none" >
+                        <img src="schreibwarenshop newsletter.jpg" height="296" width="494"/>
+                        <input type="text" id="email"/>
+                        <input type="submit" id="sub-btn" value="submit" onclick="hideElement('newsletterPrompt')" />
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+             <div class="column">
+                 <div class="shoppingcart">
+                     <img src="shopping-cart-gfe10f463c_640.png" height="80" width="80" style="float:right"/>
+                     <h3>Einkaufswagen</h3>
+                         <table class="table" id="shoppingCart">
+                             <tr>
+                             <th>Produkte</th>
+                             <th>Preis</th>
+                             </tr>
+                             <tbody id="scTable" class="scTable"></tbody>
+                         </table>
+                     <table>
+                         <tr text-align="right">
+                             <button class="inline">Zur Kasse</button>
+                             <p class="inline" id="preisGesamt" text-align="right"></p>
+
+                         </tr>
+                     </table>
+                 </div>
+                </div>
+             </div>
+     </div>
+</div>
+
+    <div class="row">
+        <div class="column">
+            <div class="zubehoer">
+                <h3>Zubehör</h3>
+                <div><table class="Para-table" id="zubehoerTable">
+                    <tr>
+                        <th>Produkt</th>
+                        <th>Preis</th>
+                        <th></th>
+
+                    </tr>
+
+                    <tbody id="zbTable" class="paraTable"></tbody>
+                </table>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="column">
+            <div class="mitteUnten">
+
+            </div>
+        </div>
+        <div class="column">
+            <div class="rechtsUnten">
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+
+<script>
+//Datenstruktur
+
+    const produkte = [
+        {
+            "id":1,
+            "Bezeichnung": "Taschenrechner",
+            "Preis": 25.99,
+            "Kategorie": "Elektrogerät"
+        },
+        {
+            "id":2,
+            "Bezeichnung":"Füller",
+            "Preis": 19.99,
+            "Kategorie": "Tinte"
+        },
+        {
+            "id":3,
+            "Bezeichnung": "Kugelschreiber",
+            "Preis":1.99,
+            "Kategorie":"Schreibwaren"
+        },
+
+        {
+            "id":4,
+            "Bezeichnung":"Bleistift",
+            "Preis":1.99,
+            "Kategorie":"Schreibwaren"
+        },
+
+        {
+            "id":5,
+            "Bezeichnung":"Klebeband",
+            "Preis":2.50,
+            "Kategorie":"Schreibwaren"
+        }
+
+    ]
+
+
+    const zubehoer = [
+
+        {
+            "id":0,
+            "Bezeichnung":"Tintenpatronen",
+            "Preis":2.99,
+            "Kategorie":"Tinte"
+        },
+        {
+            "id":5,
+            "Bezeichnung": "Briefpapier",
+            "Preis":4.99,
+            "Kategorie":"Schreibwaren"
+        },
+        {
+            "id":6,
+            "Bezeichnung":"Radiergummi",
+            "Preis":2.99,
+            "Kategorie":"Schreibwaren"
+        },
+        {
+            "id":7,
+            "Bezeichnung":"Batterie",
+            "Preis":1.99,
+            "Kategorie":"Elektrogerät"
+        },
+        {
+            "id":8,
+            "Bezeichnung":"Ladegerät",
+            "Preis":12.99,
+            "Kategorie":"Elektrogerät"
+        },
+        {
+            "id":9,
+            "Bezeichnung":"Tintentod",
+            "Preis":1.99,
+            "Kategorie":"Tinte"
+        }
+
+    ]
+
+
+    //Element Selektion Produkttabelle
+    const productTable = document.getElementById('ptable');
+
+    //Befüllt Produkte erstmalig: Beim seiten laden
+    populateProducts(productTable, produkte);
+
+    //Eventlistener: Um produkte in den Warenkorb zu legen
+    productTable.addEventListener("click", copyRow);
+
+    //Element selektion Einkaufswagen
+    const shoppingCartTable = document.querySelector('.scTable');
+    console.log("scta", shoppingCartTable);
+
+    //Elemente aus Einkaufswagen entfernen
+    shoppingCartTable.addEventListener("click", deleteRow);
+
+    //Element selektion: Zubehörtabelle
+    const paraphernaliaTable = document.getElementById('zbTable');
+    //const paraphernaliaTable = document.querySelector('.paraTable');
+    console.log("para table", paraphernaliaTable);
+
+/*
+    document.addEventListener("DOMContentLoaded", function (){ let start = Date.now();
+        while(true){
+            let delta = Date.now() - start;
+            if(delta > 30000) {
+                displayNewsletter();
+                break;
+            }
+        }
+    });
+*/
+
+    //globale Variablen
+    let gesamtPreis = 0;
+    let shoppingCartCount = 0;
+
+    //Befüllen der Produkttabelle
+    function populateProducts(table, data,) {
+        let len = data.length;
+        for (let i = 0; i < len; i++) {
+            let tr = document.createElement('tr');
+            tr.id = "row"+i;
+            let e = data[i];
+
+
+            let td = document.createElement('td');
+            td.innerHTML = e.Bezeichnung;
+            tr.appendChild(td);
+
+            td = document.createElement('td');
+            td.innerHTML = e.Preis +"€";
+            tr.appendChild(td);
+
+            let btn = document.createElement("BUTTON");
+            btn.innerHTML ="Kaufen";
+            btn.className="buy-Btn";
+            tr.appendChild(btn);
+            table.appendChild(tr);
+
+        }
+    }
+
+
+    function populateShoppingCartTable(table, data) {
+        let len = data.length;
+        let tr = document.createElement('tr');
+        let pSumme = document.getElementById('preisGesamt');
+
+        for (let i = 0; i < len; i++) {
+            let tr = document.createElement('tr');
+            tr.id = "row" + i;
+            let e = data[i];
+
+
+            let td = document.createElement('td');
+            td.innerHTML = e.Bezeichnung;
+            tr.appendChild(td);
+
+            td = document.createElement('td');
+            td.innerHTML = e.Preis;
+            tr.appendChild(td);
+
+
+            gesamtPreis += parseFloat(e.Preis);
+            pSumme.innerHTML = gesamtPreis + "€";
+
+            let btn = document.createElement("BUTTON");
+            btn.innerHTML = "Entfernen";
+            btn.className = "remove-btn";
+            tr.appendChild(btn);
+            table.appendChild(tr);
+        }
+        findParaphernalia(data, produkte, zubehoer);
+
+        shoppingCartCount+=1;
+        if(shoppingCartCount >  2){
+            displayNewsletter();
+        }
+    }
+
+
+    //Hilfsfunktionen für Newsletteranmeldung
+    function showElement(elem){
+        //let element = document.getElementById(elem);
+        let element = document.querySelector(elem);
+
+        console.log(element);
+        element.style.display="block";
+
+    }
+
+    function hideElement(elem) {
+        let element = document.getElementById(elem);
+        element.style.display="none";
+    }
+
+
+
+    function findParaphernalia(item, db_produkte, db_para){
+        let bez = item[0].Bezeichnung;
+        //const produkt = db.produkte.find({"Bezeichnung": bez})
+        const  produkt = db_produkte.find(element => element.Bezeichnung===bez);
+        //const paraphernalia = db.produkte.find({"Bezeichnung": bez, "Kategorie":"Zubehoer")}
+        const  paraphernalia  = db_para.filter(element => element.Kategorie === produkt.Kategorie);
+        populateParaphranaliaTable(paraphernaliaTable,paraphernalia);
+
+    }
+
+
+
+
+function populateParaphranaliaTable(table, data){
+    let len = data.length;
+    console.log("Data length", data.length);
+
+    for (let i = 0; i < len; i++) {
+        let tr = document.createElement('tr');
+        tr.id = "row"+i;
+        let e = data[i];
+
+
+        let td = document.createElement('td');
+        td.innerHTML = e.Bezeichnung;
+        tr.appendChild(td);
+
+        td = document.createElement('td');
+        td.innerHTML = e.Preis +"€";
+        tr.appendChild(td);
+
+        let btn = document.createElement("BUTTON");
+        btn.innerHTML ="Kaufen";
+        btn.className="buy-para-btn";
+        tr.appendChild(btn);
+        table.appendChild(tr);
+
+    }
+
+}
+
+
+
+    function copyRow(e){
+        if (!e.target.classList.contains("buy-Btn")) {
+            return;
+        }
+        const btn = e.target;
+        let tr = btn.closest("tr")
+        let produkte=[{
+            "Bezeichnung":tr.cells[0].innerHTML,
+            "Preis":tr.cells[1].innerHTML
+        }];
+
+        populateShoppingCartTable(shoppingCartTable, produkte);
+
+    }
+
+
+
+function deleteRow(e) {
+    let pSumme = document.getElementById('preisGesamt');
+
+    if (!e.target.classList.contains("remove-btn")) {
+            return;
+        }
+    const btn = e.target;
+
+    let tr = btn.closest("tr");
+
+    let preis = tr.cells[1].innerHTML;
+    gesamtPreis-=parseFloat(preis);
+    pSumme.innerHTML=gesamtPreis + "€";
+
+    tr.remove();
+    }
+
+
+
+
+
+
+/*
+function getVisitTime(){
+        let start = Date.now();
+        while(true){
+        let delta = Date.now() - start;
+        if(delta > 30000){
+            displayNewsletter();
+        }
+        }
+}
+
+
+*/
+
+
+
+</script>
+</body>
+</html>
